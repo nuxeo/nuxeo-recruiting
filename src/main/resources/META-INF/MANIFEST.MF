@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Nuxeo-WebModule: org.nuxeo.ecm.webengine.app.WebEngineModule;name=recr
+ uitment;package=org/nuxeo/platform/recruitment
+Bundle-Vendor: Nuxeo
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Bundle-Version: 5.5.0-HF01
+Bundle-Name: nuxeo-recruitment-we
+Nuxeo-Component: OSGI-INF/extensions/org.nuxeo.platform.recruitment.Re
+ cruitmentService.xml, OSGI-INF/extensions/org.nuxeo.platform.recruitment.openurl-contrib.xml
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: nuxeo-recruitment-we
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+

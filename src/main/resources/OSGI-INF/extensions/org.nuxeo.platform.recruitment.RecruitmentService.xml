@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.platform.recruitment.RecruitmentService"
+    version="1.0">
+
+    <implementation class="org.nuxeo.platform.recruitment.RecruitmentService" />
+
+    <service>
+        <provide interface="org.nuxeo.platform.recruitment.RecruitmentService" />
+    </service>
+
+</component>

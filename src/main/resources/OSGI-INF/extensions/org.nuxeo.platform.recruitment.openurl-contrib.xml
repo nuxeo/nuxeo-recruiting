@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.platform.recruitment.openurl" version="1.0">
+    <extension point="openUrl"
+        target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService">
+        <openUrl name="Recruitment">
+            <grantPattern>/nuxeo/site/recruitment.*</grantPattern>
+        </openUrl>
+        <openUrl name="Recruitment_skins">
+            <grantPattern>/nuxeo/site/skin/recruitment/.*</grantPattern>
+        </openUrl>
+    </extension>
+</component>
