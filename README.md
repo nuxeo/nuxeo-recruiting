@@ -2,10 +2,10 @@
 
 ## About the project
 
-This project is made with [Nuxeo IDE] [1], and depends of _job-recruitement-nuxeo_ [Nuxeo Studio] [2] project.
+This project is made with [Nuxeo IDE] [5], and depends of _job-recruitement-nuxeo_ [Nuxeo Studio] [6] project.
 
-[1]: http://www.nuxeo.com/en/products/nuxeoide
-[2]: http://www.nuxeo.com/en/services/connect/customization-as-a-service
+[5]: http://www.nuxeo.com/en/products/nuxeoide
+[6]: http://www.nuxeo.com/en/services/connect/customization-as-a-service
 
 ## About Nuxeo
 
