@@ -1,5 +1,11 @@
 # Nuxeo Recruiting WebEngine module
 
+## About the project
+
+This project is made with [Nuxeo IDE] [1], and depends of _job-recruitement-nuxeo_ [Nuxeo Studio] [2] project.
+
+[1]: http://www.nuxeo.com/en/products/nuxeoide
+[2]: http://www.nuxeo.com/en/services/connect/customization-as-a-service
 
 ## About Nuxeo
 
