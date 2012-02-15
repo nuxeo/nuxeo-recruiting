@@ -67,14 +67,14 @@ public class RecruitmentService extends DefaultComponent {
     public String getApplyGroupName() {
         return GROUP_APPLY_NAME;
     }
-    
+
     /**
      * @return the default human resources group name
      */
     public String getHumanResourcesGroupName() {
         return "RH";
     }
-    
+
     /**
      * Get a simple Document
      */
@@ -104,6 +104,7 @@ public class RecruitmentService extends DefaultComponent {
         creator.setName(applyName);
         creator.addProperty("dc:title", applyName);
         creator.addACE(new ACE(user.getId(), SecurityConstants.READ_WRITE, true));
+        creator.addACE(new ACE(user.getId(), SecurityConstants.WRITE_SECURITY, true));
         creator.runUnrestricted();
 
         // Send user password
@@ -158,7 +159,7 @@ public class RecruitmentService extends DefaultComponent {
             members.add(newUser.getId());
             group.setProperty(getUM().getGroupSchemaName(),
                     getUM().getGroupMembersField(), members);
-            
+
             // Save changes
             getUM().updateGroup(group);
 
@@ -179,8 +180,11 @@ public class RecruitmentService extends DefaultComponent {
             creator.setName(JOB_CONTAINER_NAME);
             creator.setParentPath(JOB_CONTAINER_PARENT);
             creator.addProperty("dc:title", "JobContainer");
+            creator.addACE(new ACE(getHumanResourcesGroupName(),
+                    SecurityConstants.WRITE_SECURITY, true));
             creator.runUnrestricted();
             container = creator.getDocumentModel();
+            log.info("JobContainer created");
         }
         return container;
     }
