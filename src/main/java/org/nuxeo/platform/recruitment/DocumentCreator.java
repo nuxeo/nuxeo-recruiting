@@ -17,7 +17,7 @@ import org.nuxeo.runtime.api.Framework;
 
 public class DocumentCreator extends UnrestrictedSessionRunner {
 
-    protected static final String ACL_KEY = "local-rh";
+    protected static final String ACL_KEY = "local-apply";
     
     protected Map<String, Serializable> properties = new HashMap<String, Serializable>();
 

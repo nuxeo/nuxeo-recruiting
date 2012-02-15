@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.ui.web.util.BaseURL;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.ModuleRoot;
 import org.nuxeo.platform.recruitment.RecruitmentService;
@@ -35,7 +36,8 @@ public class MyRoot extends ModuleRoot {
     public Object doIndex() {
         try {
             RecruitmentService service = Framework.getLocalService(RecruitmentService.class);
-            return getView("index").arg("jobs", service.getJobs());
+            return getView("index").arg("jobs", service.getJobs()).arg("baseUrl",
+                    BaseURL.getBaseURL(request));
         } catch (ClientException e) {
             log.warn(e, e);
             return null;
@@ -66,6 +68,7 @@ public class MyRoot extends ModuleRoot {
             RecruitmentService service = Framework.getLocalService(RecruitmentService.class);
             DocumentModel doc = service.createApplicationForUser(jobId,
                     firstname, lastname, email);
+
             return getView("index").arg("application", doc).arg("success", true);
         } catch (ClientException e) {
             log.warn(e, e);

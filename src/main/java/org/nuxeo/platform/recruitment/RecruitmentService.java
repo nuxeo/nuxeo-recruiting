@@ -97,12 +97,13 @@ public class RecruitmentService extends DefaultComponent {
         DocumentModel user = createNewApply(job, firstname, lastname, email);
 
         DocumentCreator creator = new DocumentCreator("Application");
-        String applyName = "pouet_"
+        String applyName = "Apply_"
                 + user.getProperty(getUM().getUserSchemaName(),
                         getUM().getUserEmailField());
         creator.setParentPath(job.getPathAsString());
         creator.setName(applyName);
         creator.addProperty("dc:title", applyName);
+        //creator.addACE(new ACE(SecurityConstants.EVERYONE, SecurityConstants.EVERYTHING, false));
         creator.addACE(new ACE(user.getId(), SecurityConstants.READ_WRITE, true));
         creator.addACE(new ACE(user.getId(), SecurityConstants.WRITE_SECURITY, true));
         creator.runUnrestricted();
@@ -201,7 +202,7 @@ public class RecruitmentService extends DefaultComponent {
             throws ClientException {
         String jobNr = (String) job.getPropertyValue(JOB_SCHEMA_NAME
                 + ":number");
-        return String.format("Candi_%s_%s", jobNr, email);
+        return String.format("ENS_%s_%s", jobNr, email);
     }
 
     protected static String generatePasswd() {

@@ -8,13 +8,14 @@
 </#if>
 
 <h1>Job listing</h1>
+
 <ol>
 <#list jobs as job>
   <li>
     <div>
         <h2>${job.title} - ${job.job_container.number}</h2>
         ${job.job_container.search_profile} -- ${job.job_container.search_contact}
-        Url: <a href="./job/${job.id}/">${job.id}</a>
+        Url: <a href="${baseUrl}site/recruitment/job/${job.id}/">${job.id}</a>
     </div>
   </li>
 </#list>
