@@ -4,6 +4,8 @@
 
 package org.nuxeo.platform.recruitment;
 
+import java.util.List;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +14,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.ACE;
@@ -35,6 +38,8 @@ public class RecruitmentService extends DefaultComponent {
 
     private static final String PASSWORD_CHARS = "abcdefghijklmnoprstuvxywzABCDEFGHIJKLMNOPRTSUVXYWZ1234567890";
 
+    protected static final String GROUP_APPLY_NAME = "Candi_apply";
+
     protected static final String JOB_SCHEMA_NAME = "job_container";
 
     protected static final String JOB_CONTAINER_PARENT = "/";
@@ -57,6 +62,20 @@ public class RecruitmentService extends DefaultComponent {
     }
 
     /**
+     * @return the default apply group name
+     */
+    public String getApplyGroupName() {
+        return GROUP_APPLY_NAME;
+    }
+    
+    /**
+     * @return the default human resources group name
+     */
+    public String getHumanResourcesGroupName() {
+        return "RH";
+    }
+    
+    /**
      * Get a simple Document
      */
     public DocumentModel getJob(String jobId) throws ClientException {
@@ -71,9 +90,9 @@ public class RecruitmentService extends DefaultComponent {
     public DocumentModel createApplicationForUser(String jobId,
             String firstname, String lastname, String email)
             throws ClientException {
-        
+
         // send event BeforeApplicationCreate
-        
+
         DocumentModel job = DocumentGetter.get(new IdRef(jobId));
         DocumentModel user = createNewApply(job, firstname, lastname, email);
 
@@ -92,9 +111,9 @@ public class RecruitmentService extends DefaultComponent {
                 + user.getProperty(getUM().getUserSchemaName(), "password"));
 
         DocumentModel application = creator.getDocumentModel();
-        
+
         // send event ApplicationCreated event
-        
+
         return application;
     }
 
@@ -104,7 +123,7 @@ public class RecruitmentService extends DefaultComponent {
         if (getUM().searchUsers(username).size() > 0) {
             throw new ClientException("User: " + username + " already exists");
         }
-        
+
         DocumentModel newUser = getUM().getBareUserModel();
         newUser.setProperty(getUM().getUserSchemaName(),
                 getUM().getUserIdField(), generateLogin(job, email));
@@ -118,10 +137,37 @@ public class RecruitmentService extends DefaultComponent {
 
         log.debug("Create recruitment user with id: " + newUser.getId());
 
-        DocumentModel doc = getUW().getCurrentUserPersonalWorkspace(newUser.getId(), job);
-        log.warn(doc.getPathAsString());
-        
+        addApplyToGroup(newUser);
+
         return newUser;
+    }
+
+    protected void addApplyToGroup(DocumentModel newUser) {
+        try {
+            DocumentModel group = getUM().getGroupModel(GROUP_APPLY_NAME);
+            if (group == null) {
+                DocumentModel applyGroup = getUM().getBareGroupModel();
+                applyGroup.setProperty(getUM().getGroupSchemaName(),
+                        getUM().getGroupIdField(), GROUP_APPLY_NAME);
+                group = getUM().createGroup(applyGroup);
+            }
+            // Add new apply member
+            List<String> members = (List<String>) group.getProperty(
+                    getUM().getGroupSchemaName(),
+                    getUM().getGroupMembersField());
+            members.add(newUser.getId());
+            group.setProperty(getUM().getGroupSchemaName(),
+                    getUM().getGroupMembersField(), members);
+            
+            // Save changes
+            getUM().updateGroup(group);
+
+            log.debug("Member " + newUser.getId() + " added to group "
+                    + group.getId());
+        } catch (ClientException e) {
+            log.warn("Unable to get group for user registration", e);
+            log.debug(e, e);
+        }
     }
 
     protected DocumentModel getOrCreateJobContainer() throws ClientException {
@@ -142,7 +188,7 @@ public class RecruitmentService extends DefaultComponent {
     protected static UserManager getUM() {
         return Framework.getLocalService(UserManager.class);
     }
-    
+
     protected static UserWorkspaceService getUW() {
         return Framework.getLocalService(UserWorkspaceService.class);
     }
