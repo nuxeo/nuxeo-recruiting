@@ -9,6 +9,7 @@
   <groupId>org.nuxeo.platform</groupId>
   <artifactId>nuxeo-recruitment-we</artifactId>
   <name>nuxeo-recruitment-we</name>
+  <version>5.5.0-I20120216</version>
   <description/>
   <dependencies>
     <dependency>
