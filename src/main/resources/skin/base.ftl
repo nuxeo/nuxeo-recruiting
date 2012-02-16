@@ -2,7 +2,7 @@
 <head>
   <title>
      <@block name="title">
-     WebEngine Project
+     ENS - Formulaire de recrutement
      </@block>
   </title>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
@@ -19,7 +19,7 @@
       <td>
         <table class="header">
             <tr>
-            <td><img src="${skinPath}/img/logo.png"</td>
+            <td><img src="${skinPath}/img/ensCachan.gif"</td>
             <td align="right"><@block name="header">The Header</@block></td>
             </tr>
         </table>

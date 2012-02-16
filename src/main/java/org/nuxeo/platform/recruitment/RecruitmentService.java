@@ -98,8 +98,10 @@ public class RecruitmentService extends DefaultComponent {
 
         // send event BeforeApplicationCreate
 
+        String passwrd = generatePasswd();
         DocumentModel job = DocumentGetter.get(new IdRef(jobId));
-        DocumentModel user = createNewApply(job, firstname, lastname, email);
+        DocumentModel user = createNewApply(job, firstname, lastname, email,
+                passwrd);
 
         DocumentCreator creator = new DocumentCreator("Application");
         String applyName = "Apply_"
@@ -129,7 +131,7 @@ public class RecruitmentService extends DefaultComponent {
         creator.runUnrestricted();
 
         // Send user password
-        sendMailOperation(user);
+        sendMailOperation(user, passwrd);
         log.warn("User: " + user.getId() + " Pwd: "
                 + user.getProperty(getUM().getUserSchemaName(), "password"));
 
@@ -141,7 +143,8 @@ public class RecruitmentService extends DefaultComponent {
     }
 
     protected DocumentModel createNewApply(DocumentModel job, String firstname,
-            String lastname, String email) throws ClientException {
+            String lastname, String email, String password)
+            throws ClientException {
         String username = generateLogin(job, email);
         if (getUM().searchUsers(username).size() > 0) {
             throw new ClientException("User: " + username + " already exists");
@@ -152,8 +155,7 @@ public class RecruitmentService extends DefaultComponent {
                 getUM().getUserIdField(), generateLogin(job, email));
         newUser.setProperty(getUM().getUserSchemaName(),
                 getUM().getUserEmailField(), email);
-        newUser.setProperty(getUM().getUserSchemaName(), "password",
-                generatePasswd());
+        newUser.setProperty(getUM().getUserSchemaName(), "password", password);
         newUser.setProperty(getUM().getUserSchemaName(), "lastName", lastname);
         newUser.setProperty(getUM().getUserSchemaName(), "firstName", firstname);
         newUser = getUM().createUser(newUser);
@@ -193,12 +195,11 @@ public class RecruitmentService extends DefaultComponent {
         }
     }
 
-    protected void sendMailOperation(DocumentModel apply)
+    protected void sendMailOperation(DocumentModel apply, String passwrd)
             throws ClientException {
         OperationContext ctx = new OperationContext();
         ctx.put("applyUsername", apply.getId());
-        ctx.put("applyPassword",
-                apply.getProperty(getUM().getUserSchemaName(), "password"));
+        ctx.put("applyPassword", passwrd);
         ctx.put("apply", apply);
         ctx.setInput(apply);
 
