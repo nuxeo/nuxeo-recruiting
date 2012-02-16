@@ -43,6 +43,8 @@ public class RecruitmentService extends DefaultComponent {
 
     protected static final String GROUP_APPLY_NAME = "Candi_apply";
 
+    protected static final String GROUP_RH = "Gestionnaire_RH";
+
     protected static final String JOB_SCHEMA_NAME = "job";
 
     protected static final String JOB_CONTAINER_PARENT = "/";
@@ -58,8 +60,8 @@ public class RecruitmentService extends DefaultComponent {
     public DocumentModelList getJobs() throws ClientException {
         DocumentModel container = getOrCreateJobContainer();
         DocumentQuery query = new DocumentQuery(
-                "Select * from Job where ecm:parentId = '" + container.getId()
-                        + "'");
+                "Select * from Job where ecm:currentLifeCycleState = 'open' AND ecm:parentId = '"
+                        + container.getId() + "'");
         query.runUnrestricted();
         return query.getDocuments();
     }
@@ -75,7 +77,7 @@ public class RecruitmentService extends DefaultComponent {
      * @return the default human resources group name
      */
     public String getHumanResourcesGroupName() {
-        return "RH";
+        return GROUP_RH;
     }
 
     /**

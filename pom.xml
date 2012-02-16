@@ -72,10 +72,6 @@
       <groupId>org.nuxeo.ecm.platform</groupId>
       <artifactId>nuxeo-platform-ui-web</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.nuxeo.ecm.platform</groupId>
-      <artifactId>nuxeo-platform-userworkspace-api</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -107,6 +103,20 @@
               <sources>
                 <source>src/main/seam</source>
               </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-resource</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>

@@ -6,9 +6,10 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Version: 5.5.0-HF01
 Bundle-Name: nuxeo-recruitment-we
-Nuxeo-Component: OSGI-INF/extensions/org.nuxeo.platform.recruitment.Re
- cruitmentService.xml, OSGI-INF/extensions/org.nuxeo.platform.recruitment.openurl-contrib.xml
 Bundle-ManifestVersion: 2
+Nuxeo-Component: OSGI-INF/extensions/org.nuxeo.platform.recruitment.Re
+ cruitmentService.xml,OSGI-INF/extensions/org.nuxeo.platform.recruitme
+ nt.openurl-contrib.xml
 Bundle-SymbolicName: nuxeo-recruitment-we
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 
