@@ -103,9 +103,24 @@ public class RecruitmentService extends DefaultComponent {
         creator.setParentPath(job.getPathAsString());
         creator.setName(applyName);
         creator.addProperty("dc:title", applyName);
-        //creator.addACE(new ACE(SecurityConstants.EVERYONE, SecurityConstants.EVERYTHING, false));
+        creator.addProperty(
+                "ap:email",
+                user.getPropertyValue(getUM().getUserSchemaName() + ":"
+                        + getUM().getUserEmailField()));
+        creator.addProperty(
+                "ap:firstname",
+                user.getPropertyValue(getUM().getUserSchemaName()
+                        + ":firstName"));
+        creator.addProperty(
+                "ap:lastname",
+                user.getPropertyValue(getUM().getUserSchemaName() + ":lastName"));
+        creator.addProperty("ap:username", (String) user.getProperty(
+                getUM().getUserSchemaName(), getUM().getUserIdField()));
+        // creator.addACE(new ACE(SecurityConstants.EVERYONE,
+        // SecurityConstants.EVERYTHING, false));
         creator.addACE(new ACE(user.getId(), SecurityConstants.READ_WRITE, true));
-        creator.addACE(new ACE(user.getId(), SecurityConstants.WRITE_SECURITY, true));
+        creator.addACE(new ACE(user.getId(), SecurityConstants.WRITE_SECURITY,
+                true));
         creator.runUnrestricted();
 
         // Send user password
