@@ -22,7 +22,6 @@ table.main td {
 }
 
 table.header {
-    background-color:black;
     border: 0px;
     width: 100%;
     border-spacing: 0px;
@@ -34,4 +33,39 @@ table.header td {
     padding: 4px;
     color: white;   
     vertical-align: middle;
+}
+
+.like-pre {
+white-space: pre;
+}
+
+#banner {
+    background-color: #B9520E;
+}
+
+h2 {
+    font-size: 14px;
+    color: #E1980A;
+}
+
+a {
+    text-decoration: none;
+}
+
+label {
+    display: block;
+    float: left;
+    width: 160px;
+}
+
+.textField input {
+    width: 160px;
+}
+
+fieldset div {
+  clear: both;
+}
+
+tr.content td {
+    padding: 15px;
 }

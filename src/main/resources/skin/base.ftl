@@ -20,12 +20,14 @@
         <table class="header">
             <tr>
             <td><img src="${skinPath}/img/ensCachan.gif"</td>
-            <td align="right"><@block name="header">The Header</@block></td>
+            </tr>
+            <tr>
+            <td id="banner"><@block name="header">Candidature 2012</@block></td>
             </tr>
         </table>
       </td>
     </tr>
-    <tr height="98%">
+    <tr height="98%" class="content">
       <td valign="top"><@block name="content">The Content</@block></td>
     </tr>
   </table/>
