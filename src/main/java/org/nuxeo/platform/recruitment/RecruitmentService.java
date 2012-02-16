@@ -4,13 +4,22 @@
 
 package org.nuxeo.platform.recruitment;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.automation.InvalidChainException;
+import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.automation.OperationException;
+import org.nuxeo.ecm.automation.core.impl.OperationServiceImpl;
+import org.nuxeo.ecm.automation.core.operations.notification.SendMail;
 import org.nuxeo.ecm.automation.core.operations.services.UserWorkspace;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IdRef;
@@ -124,6 +133,7 @@ public class RecruitmentService extends DefaultComponent {
         creator.runUnrestricted();
 
         // Send user password
+        sendMailOperation(user);
         log.warn("User: " + user.getId() + " Pwd: "
                 + user.getProperty(getUM().getUserSchemaName(), "password"));
 
@@ -187,6 +197,33 @@ public class RecruitmentService extends DefaultComponent {
         }
     }
 
+    protected void sendMailOperation(DocumentModel apply)
+            throws ClientException {
+        OperationContext ctx = new OperationContext();
+        ctx.put("applyUsername", apply.getId());
+        ctx.put("applyPassword",
+                apply.getProperty(getUM().getUserSchemaName(), "password"));
+        ctx.put("apply", apply);
+        ctx.setInput(apply);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("from", "recrutement@ens-cachan.fr");
+        params.put("message", "template:application_newApply");
+        params.put("subject", "[ENS] Your login and password");
+        params.put("to", apply.getProperty(getUM().getUserSchemaName(),
+                getUM().getUserEmailField()));
+        params.put("HTML", true);
+
+        try {
+            getAS().run(ctx, SendMail.ID, params);
+        } catch (OperationException e) {
+            log.warn("Unable to run Operation", e);
+            log.debug(e, e);
+        } catch (Exception e) {
+            throw new ClientRuntimeException(e);
+        }
+    }
+
     protected DocumentModel getOrCreateJobContainer() throws ClientException {
         DocumentModel container = DocumentGetter.get(new PathRef(
                 JOB_CONTAINER_PATH));
@@ -203,6 +240,10 @@ public class RecruitmentService extends DefaultComponent {
             log.info("JobContainer created");
         }
         return container;
+    }
+
+    protected static AutomationService getAS() {
+        return Framework.getLocalService(AutomationService.class);
     }
 
     protected static UserManager getUM() {
