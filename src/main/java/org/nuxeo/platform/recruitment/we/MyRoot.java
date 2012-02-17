@@ -71,9 +71,9 @@ public class MyRoot extends ModuleRoot {
         try {
             RecruitmentService service = Framework.getLocalService(RecruitmentService.class);
             doc = service.createApplicationForUser(jobId, firstname, lastname,
-                    email);
-            documentUrl = DocumentModelFunctions.documentUrl(null, doc,
-                    "view_documents", null, true, ctx.getRequest());
+                    email, ctx.getRequest());
+            documentUrl = RecruitmentService.getCASLessUrlForDoc(doc,
+                    ctx.getRequest());
         } catch (ClientException e) {
             log.warn(e, e);
             errorMessage = e.getMessage();

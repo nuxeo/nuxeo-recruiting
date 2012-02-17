@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,6 +27,8 @@ import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
+import org.nuxeo.ecm.platform.ui.web.util.BaseURL;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.ecm.platform.userworkspace.api.UserWorkspaceService;
 import org.nuxeo.runtime.api.Framework;
@@ -93,8 +98,8 @@ public class RecruitmentService extends DefaultComponent {
      * ACE to it
      */
     public DocumentModel createApplicationForUser(String jobId,
-            String firstname, String lastname, String email)
-            throws ClientException {
+            String firstname, String lastname, String email,
+            HttpServletRequest request) throws ClientException {
 
         // send event BeforeApplicationCreate
 
@@ -129,13 +134,19 @@ public class RecruitmentService extends DefaultComponent {
         creator.addACE(new ACE(user.getId(), SecurityConstants.WRITE_SECURITY,
                 true));
         creator.runUnrestricted();
+        DocumentModel application = creator.getDocumentModel();
 
         // Send user password
-        sendMailOperation(user, passwrd);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("applyUsername", user.getId());
+        params.put("applyPassword", passwrd);
+        params.put("apply", user);
+        params.put("job", job);
+        params.put("applicationUrl", getCASLessUrlForDoc(application, request));
+
+        sendMailOperation(user, params);
         log.warn("User: " + user.getId() + " Pwd: "
                 + user.getProperty(getUM().getUserSchemaName(), "password"));
-
-        DocumentModel application = creator.getDocumentModel();
 
         // send event ApplicationCreated event
 
@@ -177,6 +188,7 @@ public class RecruitmentService extends DefaultComponent {
                 group = getUM().createGroup(applyGroup);
             }
             // Add new apply member
+            @SuppressWarnings("unchecked")
             List<String> members = (List<String>) group.getProperty(
                     getUM().getGroupSchemaName(),
                     getUM().getGroupMembersField());
@@ -195,19 +207,17 @@ public class RecruitmentService extends DefaultComponent {
         }
     }
 
-    protected void sendMailOperation(DocumentModel apply, String passwrd)
-            throws ClientException {
+    protected void sendMailOperation(DocumentModel user,
+            Map<String, Object> ctxParams) throws ClientException {
         OperationContext ctx = new OperationContext();
-        ctx.put("applyUsername", apply.getId());
-        ctx.put("applyPassword", passwrd);
-        ctx.put("apply", apply);
-        ctx.setInput(apply);
+        ctx.putAll(ctxParams);
+        ctx.setInput(user);
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("from", "recrutement@ens-cachan.fr");
         params.put("message", "template:application_newApply");
         params.put("subject", "[ENS] Your login and password");
-        params.put("to", apply.getProperty(getUM().getUserSchemaName(),
+        params.put("to", user.getProperty(getUM().getUserSchemaName(),
                 getUM().getUserEmailField()));
         params.put("HTML", true);
 
@@ -237,6 +247,12 @@ public class RecruitmentService extends DefaultComponent {
             log.info("JobContainer created");
         }
         return container;
+    }
+
+    public static String getCASLessUrlForDoc(DocumentModel doc,
+            HttpServletRequest request) {
+        return BaseURL.getBaseURL(request).concat("login.jsp?requestedUrl=").concat(
+                DocumentModelFunctions.documentUrl(doc));
     }
 
     protected static AutomationService getAS() {
