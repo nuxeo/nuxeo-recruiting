@@ -4,7 +4,7 @@
 <#if error??>
 <h1>Votre candidature n'a pas pu etre enregistr&eacute; pour la raison suivante:</h1>
 <#else>
-<h1>Votre candidature a correctement &eacute;tait prise en compte</h1>
+<h1>Votre candidature a correctement &eacute;t&eacute; prise en compte</h1>
 </#if>
 </@block>
 

@@ -29,7 +29,7 @@ ${job.job.qualification}
 ${job.job.department}
 <h2>Laboratoire de recherche</h2>
 ${job.job.laboratory}
-<h2>Lacalisation</h2>
+<h2>Localisation</h2>
 <span class="like-pre">${job.job.location}</span>
 <h2>Contact</h2>
 ${job.job.contact}
@@ -39,19 +39,19 @@ ${job.job.contact}
 
 <div>
 <h2>Profil Enseignement</h2>
-<span class="like-pre">${job.job.teaching_profile_fr}</span>
+<span>${job.job.teaching_profile_fr}</span>
 <h2>Teaching profile</h2>
-<span class="like-pre">${job.job.teaching_profile_en}</span>
-<h2>Contact</h2>
+<span>${job.job.teaching_profile_en}</span>
+<h2>Contact département d'enseignement</h2>
 ${job.job.teaching_contact}
 </div>
 
 <div>
 <h2>Profil Recherche</h2>
-<span class="like-pre">${job.job.search_profile_fr}</span>
+<span>${job.job.search_profile_fr}</span>
 <h2>Search profile</h2>
-<span class="like-pre">${job.job.search_profile_en}</span>
-<h2>Contact</h2>
+<span>${job.job.search_profile_en}</span>
+<h2>Contact laboratoire</h2>
 ${job.job.search_contact}
 </div>
 </div>
