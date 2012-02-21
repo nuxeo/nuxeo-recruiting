@@ -15,6 +15,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.automation.InvalidChainException;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.operations.notification.SendMail;
@@ -144,7 +145,7 @@ public class RecruitmentService extends DefaultComponent {
         params.put("job", job);
         params.put("applicationUrl", getCASLessUrlForDoc(application, request));
 
-        sendMailOperation(user, params);
+        sendNewApplyMail(job, params);
         log.warn("User: " + user.getId() + " Pwd: "
                 + user.getProperty(getUM().getUserSchemaName(), "password"));
 
@@ -207,25 +208,14 @@ public class RecruitmentService extends DefaultComponent {
         }
     }
 
-    protected void sendMailOperation(DocumentModel user,
+    protected void sendNewApplyMail(DocumentModel user,
             Map<String, Object> ctxParams) throws ClientException {
         OperationContext ctx = new OperationContext();
         ctx.putAll(ctxParams);
         ctx.setInput(user);
 
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("from", "recrutement@ens-cachan.fr");
-        params.put("message", "template:application_newApply");
-        params.put("subject", "[ENS] Your login and password");
-        params.put("to", user.getProperty(getUM().getUserSchemaName(),
-                getUM().getUserEmailField()));
-        params.put("HTML", true);
-
         try {
-            getAS().run(ctx, SendMail.ID, params);
-        } catch (OperationException e) {
-            log.warn("Unable to run Operation", e);
-            log.debug(e, e);
+            getAS().run(ctx, "Application_newApply");
         } catch (Exception e) {
             throw new ClientRuntimeException(e);
         }
