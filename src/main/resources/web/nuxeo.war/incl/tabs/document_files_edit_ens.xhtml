@@ -30,9 +30,8 @@
   rendered="#{currentDocument.hasSchema('files')}">
 
   <div>
-    <h2>Candidature pour le poste de ${recruitmentService.getJob(currentDocument.parentId)}</h2>
-    <hr/>
-    <h2>Contenu du dossier de candidature</h2>
+    <h2>Candidature pour le poste: <a target="_blank" href="site/recruitment/job/${recruitmentService.getJob(currentDocument.parentRef).id}/">${recruitmentService.getJob(currentDocument.parentRef).title}</a></h2>
+    <h3>Contenu du dossier de candidature</h3>
     <ul>
       <li>- Déclaration GALAXIE, datée et signée par le candidat</li>
       <li>- pièce d'identité avec photographie</li>
