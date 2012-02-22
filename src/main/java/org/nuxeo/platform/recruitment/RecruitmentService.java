@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.utils.StringUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.InvalidChainException;
 import org.nuxeo.ecm.automation.OperationContext;
@@ -241,8 +242,9 @@ public class RecruitmentService extends DefaultComponent {
 
     public static String getCASLessUrlForDoc(DocumentModel doc,
             HttpServletRequest request) {
-        return BaseURL.getBaseURL(request).concat("login.jsp?requestedUrl=").concat(
-                DocumentModelFunctions.documentUrl(doc));
+        String baseUrl = BaseURL.getBaseURL(request);
+        String docUrl = DocumentModelFunctions.documentUrl(doc).replaceAll(baseUrl, ""); 
+        return baseUrl.concat("login.jsp?requestedUrl=").concat(docUrl);
     }
 
     protected static AutomationService getAS() {
